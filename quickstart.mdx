@@ -1,80 +1,59 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Launch your first OptaReach campaign in under 20 minutes."
 ---
 
-## Get started in three steps
+Follow these steps to connect a platform, add leads, and send your first automated outreach.
 
-Get your documentation site running locally and make your first customization.
+## Before you begin
 
-### Step 1: Set up your local environment
+- Create an OptaReach account at [optareach.com/register](https://optareach.com/register).
+- Have at least one platform login ready (LinkedIn, X, Reddit, GitHub, Hacker News, Stack Overflow, or an email inbox).
+- Decide on a narrow audience (keywords, roles, repos, subreddits, or tags) for your first test.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## 1) Create your workspace and connect accounts
 
-### Step 2: Deploy your changes
+1. Go to **Settings > Accounts** and add the platform(s) you want to use. OptaReach supports multiple accounts per channel.
+2. Set daily limits and warmup pacing in Account Health to keep sending natural.
+3. If you plan to use email, connect via OAuth (Gmail/Outlook) or IMAP/SMTP and set a friendly from-name and signature.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+## 2) Add leads
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+Pick one or more sources:
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+- **Upload CSV** with names, roles, companies, profile URLs, and emails (if you have them).
+- **Platform search** using native filters: LinkedIn search, X hashtags and mentions, Reddit subreddits and keywords, GitHub repos/issues/discussions, Hacker News stories, Stack Overflow tags/questions.
+- **Tracked searches** to auto-refresh new matches daily. Save the query to keep your pipeline topped up.
+- **OptaReach lead finder** when you want pre-filtered audiences from our database.
 
-### Step 3: Go live
+OptaReach deduplicates across uploads and searches so you do not re-message the same contact twice.
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+## 3) Build a sequence
+
+1. Open **Campaigns > New sequence** and choose your platform.
+2. Drag actions into the canvas. Common patterns:
+   - LinkedIn: View profile → Wait → Like posts → Connect with note → Wait → Message follow-up.
+   - X: Track hashtag/mentions → Like/reply → DM with AI-personalized copy.
+   - Reddit/GitHub/Hacker News/Stack Overflow: Monitor targets → Post comment/answer → Follow up with DM (where allowed).
+   - Email: Multi-step sequence with waits and branch on reply detected.
+3. Add **wait steps** between actions to keep pacing human.
+4. Use **Social Media GPTs** to draft connection notes, DMs, or replies using profile or post context.
+5. Add **conditional branches** for accepted, replied, or no-response paths.
+
+## 4) Launch and monitor
+
+1. Set send windows, daily caps, and safety limits per account.
+2. Start the campaign and watch delivery, clicks, accepts, and replies in Campaign Analytics.
+3. Handle every response from **Unibox** so threads stay unified across platforms.
+4. Pause or edit a sequence at any time; changes apply to leads that have not reached that step yet.
+
+## 5) Keep accounts healthy
+
+- Spread volume across multiple accounts when you scale.
+- Keep wait times varied and avoid sending identical copy; lean on GPT variations.
+- Monitor Account Health for blocks, throttles, or inbox full signals before increasing volume.
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+- Follow a platform-specific playbook: [LinkedIn](/platforms/linkedin), [X](/platforms/x), [Reddit](/platforms/reddit), [GitHub](/platforms/github), [Hacker News](/platforms/hacker-news), [Stack Overflow](/platforms/stackoverflow), or [Email](/platforms/email).
+- Learn how to [manage accounts and tracked searches](/workspace/accounts) and [build repeatable campaigns](/workspace/leads-and-campaigns).
