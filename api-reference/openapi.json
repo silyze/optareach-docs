@@ -1,216 +1,1774 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "OptaReach Public API",
+    "version": "1.0.0",
+    "description": "Platform-first API surface for accounts, prospects, campaigns, inbox, tracked searches, AI rooms, jobs, workspaces, analytics, billing, profile, and knowledge bases."
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "/",
+      "description": "Current environment"
     }
   ],
-  "security": [
+  "tags": [
     {
-      "bearerAuth": []
+      "name": "Meta",
+      "description": "API metadata and discovery"
+    },
+    {
+      "name": "Platforms",
+      "description": "Platform registry and capabilities"
+    },
+    {
+      "name": "Accounts",
+      "description": "Connected sender accounts"
+    },
+    {
+      "name": "Prospects",
+      "description": "Prospect lists and leads"
+    },
+    {
+      "name": "Campaigns",
+      "description": "Campaign lifecycle and performance"
+    },
+    {
+      "name": "Inbox",
+      "description": "Conversations and messages"
+    },
+    {
+      "name": "TrackedSearches",
+      "description": "Mentions and tracked search streams"
+    },
+    {
+      "name": "AI",
+      "description": "AI chat rooms and enrichment"
+    },
+    {
+      "name": "Jobs",
+      "description": "Background jobs"
+    },
+    {
+      "name": "Workspaces",
+      "description": "Workspace management"
+    },
+    {
+      "name": "KnowledgeBases",
+      "description": "Knowledge base management"
+    },
+    {
+      "name": "Analytics",
+      "description": "Global dashboard metrics"
+    },
+    {
+      "name": "Billing",
+      "description": "Subscriptions and credits"
+    },
+    {
+      "name": "Profile",
+      "description": "Current user profile"
+    },
+    {
+      "name": "Tags",
+      "description": "Conversation tags"
+    },
+    {
+      "name": "Notifications",
+      "description": "Notification feed"
     }
   ],
   "paths": {
-    "/plants": {
+    "/api/v1": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "tags": [
+          "Meta"
+        ],
+        "summary": "API root metadata",
+        "responses": {
+          "200": {
+            "description": "API metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "description": "Endpoint payload."
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "OpenAPI document",
+        "responses": {
+          "200": {
+            "description": "OpenAPI spec JSON"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms": {
+      "get": {
+        "tags": [
+          "Platforms"
+        ],
+        "summary": "List supported platforms",
+        "responses": {
+          "200": {
+            "description": "Platform list"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}": {
+      "get": {
+        "tags": [
+          "Platforms"
+        ],
+        "summary": "Get platform details",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "$ref": "#/components/parameters/platform"
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
+            "description": "Platform details"
           },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/capabilities": {
+      "get": {
+        "tags": [
+          "Platforms"
+        ],
+        "summary": "Get platform capability matrix",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Platform capabilities"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/accounts": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "List accounts for platform",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accounts"
           }
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Create account",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
         "requestBody": {
-          "description": "Plant to add to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "type": "object"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          "201": {
+            "description": "Account created"
           }
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/api/v1/platforms/{platform}/accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Get account",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/accountId"
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Account"
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
+      },
+      "patch": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Update account metadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/accountId"
+          }
+        ],
         "requestBody": {
-          "description": "Plant added to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "type": "object"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "Account updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Delete account",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/accountId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/accounts/{accountId}/capture-session": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Capture browser session for account",
+        "description": "Compatibility endpoint. Returns 501 until adapter is implemented.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/accountId"
+          }
+        ],
+        "responses": {
+          "501": {
+            "$ref": "#/components/responses/NotImplemented"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists": {
+      "get": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "List prospect lists",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect lists"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Create prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Prospect list created"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}": {
+      "get": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Get prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect list"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Update prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect list updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Delete prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect list deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}/leads": {
+      "get": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "List leads in prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leads page"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Append leads to prospect list",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leads imported"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}/leads/import-csv": {
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Import leads from CSV-normalized rows",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Import result"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}/leads/import-json": {
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Import leads from JSON array",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Import result"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}/leads/move": {
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Move leads between lists",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Move result"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/leads/{leadId}/find-email": {
+      "get": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Get find-email status for lead",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/leadId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lead find-email status"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Prospects"
+        ],
+        "summary": "Find email for lead",
+        "description": "Queues or resolves email discovery for a lead (currently linkedin).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/leadId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Find-email accepted/result"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/prospect-lists/{listId}/ai-enrich": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "AI enrich leads in list",
+        "description": "Compatibility endpoint. Returns 501 until adapter is implemented.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/listId"
+          }
+        ],
+        "responses": {
+          "501": {
+            "$ref": "#/components/responses/NotImplemented"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "List campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaigns"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Create campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Campaign created"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Get campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Update campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Delete campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}/pause": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Pause campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paused"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}/resume": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Resume campaign",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resumed"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}/stats": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Campaign stats",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stats"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}/targets": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Campaign targets",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Targets"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/campaigns/{campaignId}/message-template/generate": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Generate campaign message template",
+        "description": "Proxies to the existing message-template generator and injects campaign context.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/campaignId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated template"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/conversations": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "List conversations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conversation page"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/conversations/{conversationId}/messages": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Get conversation messages",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/conversationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Send message in conversation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/conversationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message sent"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/conversations/{conversationId}/mark-read": {
+      "post": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Mark conversation as read",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/conversationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marked as read"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/inbox/unread-summary": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Unread summary for platform",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unread summary"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/tracked-searches": {
+      "get": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "List tracked searches",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracked searches"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "Create tracked search",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Tracked search created"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/tracked-searches/{searchId}": {
+      "get": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "Get tracked search",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracked search"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "Update tracked search",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracked search updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "Delete tracked search",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracked search deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/tracked-searches/{searchId}/results": {
+      "get": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "List tracked search results",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracked search results"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/tracked-searches/{searchId}/results/{resultId}/reply": {
+      "post": {
+        "tags": [
+          "TrackedSearches"
+        ],
+        "summary": "Reply to tracked search result",
+        "description": "Queues a reply-post job through the existing tracked-search reply route.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          },
+          {
+            "$ref": "#/components/parameters/resultId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reply queued"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/tracked-searches/{searchId}/ai-enrich": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "AI enrich tracked search results",
+        "description": "Compatibility endpoint. Returns 501 until adapter is implemented.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/searchId"
+          }
+        ],
+        "responses": {
+          "501": {
+            "$ref": "#/components/responses/NotImplemented"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/ai/rooms": {
+      "get": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "List AI rooms",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AI rooms"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Create AI room",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "AI room created"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/ai/rooms/{roomId}/messages": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Append message to AI room",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/roomId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message appended"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/jobs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "List jobs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Jobs"
+          }
+        }
+      }
+    },
+    "/api/v1/platforms/{platform}/jobs/{jobId}": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Get job",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/platform"
+          },
+          {
+            "$ref": "#/components/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job"
+          }
+        }
+      }
+    },
+    "/api/v1/workspaces": {
+      "get": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "List workspaces",
+        "responses": {
+          "200": {
+            "description": "Workspaces"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Create workspace",
+        "responses": {
+          "201": {
+            "description": "Workspace created"
+          }
+        }
+      }
+    },
+    "/api/v1/workspaces/{workspaceId}": {
+      "get": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Get workspace details",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace details"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Update workspace",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Delete workspace",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/workspaces/{workspaceId}/members": {
+      "get": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "List members and invitations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Members"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Invite member",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invite result"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Update member role",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Remove member or invitation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/workspaceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed"
+          }
+        }
+      }
+    },
+    "/api/v1/knowledge-bases": {
+      "get": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "List knowledge bases",
+        "responses": {
+          "200": {
+            "description": "Knowledge base list"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "Create knowledge base",
+        "responses": {
+          "201": {
+            "description": "Knowledge base created"
+          }
+        }
+      }
+    },
+    "/api/v1/knowledge-bases/{knowledgeBaseId}": {
+      "get": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "Get knowledge base",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/knowledgeBaseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Knowledge base"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "Delete knowledge base",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/knowledgeBaseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/knowledge-bases/{knowledgeBaseId}/resources": {
+      "post": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "Add knowledge base resources",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/knowledgeBaseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resources added"
+          }
+        }
+      }
+    },
+    "/api/v1/knowledge-bases/{knowledgeBaseId}/resources/{resourceId}": {
+      "delete": {
+        "tags": [
+          "KnowledgeBases"
+        ],
+        "summary": "Delete knowledge base resource",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/knowledgeBaseId"
+          },
+          {
+            "$ref": "#/components/parameters/resourceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/overview": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Overview metrics",
+        "responses": {
+          "200": {
+            "description": "Metrics"
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "List subscriptions",
+        "responses": {
+          "200": {
+            "description": "Subscriptions"
+          }
+        }
+      }
+    },
+    "/api/v1/credits": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Get credit balance",
+        "responses": {
+          "200": {
+            "description": "Credits"
+          }
+        }
+      }
+    },
+    "/api/v1/profile": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get profile",
+        "responses": {
+          "200": {
+            "description": "Profile"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Update profile",
+        "responses": {
+          "200": {
+            "description": "Profile updated"
+          }
+        }
+      }
+    },
+    "/api/v1/conversation-tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "List conversation tags",
+        "responses": {
+          "200": {
+            "description": "Tags"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Upsert conversation tag",
+        "responses": {
+          "200": {
+            "description": "Tag upserted"
+          }
+        }
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "List notifications",
+        "responses": {
+          "200": {
+            "description": "Notifications"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Update notification read status",
+        "responses": {
+          "200": {
+            "description": "Updated IDs"
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "token",
+        "description": "Session cookie currently used by the app."
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Reserved for external API key auth rollout."
+      }
+    },
+    "parameters": {
+      "platform": {
+        "name": "platform",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
+      "accountId": {
+        "name": "accountId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
+      "listId": {
+        "name": "listId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "leadId": {
+        "name": "leadId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "campaignId": {
+        "name": "campaignId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "conversationId": {
+        "name": "conversationId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Composite key: accountId:prospectTargetId"
+        }
+      },
+      "searchId": {
+        "name": "searchId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resultId": {
+        "name": "resultId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "roomId": {
+        "name": "roomId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "jobId": {
+        "name": "jobId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "workspaceId": {
+        "name": "workspaceId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "knowledgeBaseId": {
+        "name": "knowledgeBaseId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resourceId": {
+        "name": "resourceId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "schemas": {
+      "DataEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Endpoint payload."
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {}
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "NotImplemented": {
+        "description": "Endpoint is planned but not yet wired",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
       }
     }
   }

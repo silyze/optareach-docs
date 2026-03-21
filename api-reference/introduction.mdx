@@ -1,33 +1,37 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Reference for the OptaReach public API surface'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
-
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Overview
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="OpenAPI Specification"
+  icon="code"
+  href="https://optareach.com/api/v1/openapi.json"
 >
-  View the OpenAPI specification file
+  View the live OptaReach OpenAPI document
 </Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+The API reference is generated from the OptaReach OpenAPI definition and currently documents 76 operations across the platform surface, including accounts, prospect lists, campaigns, inbox, tracked searches, AI rooms, workspaces, analytics, billing, profile, notifications, and knowledge bases.
+
+Current auth schemes exposed in the specification:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
+"securitySchemes": {
+  "cookieAuth": {
+    "type": "apiKey",
+    "in": "cookie",
+    "name": "token"
+  },
+  "apiKeyAuth": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "x-api-key"
   }
-]
+}
 ```
+
+Use the `Endpoints` group in the left navigation to browse the full OptaReach API surface generated from the synced specification.

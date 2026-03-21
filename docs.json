@@ -8,6 +8,14 @@
     "dark": "#0B3A75"
   },
   "favicon": "/favicon.ico",
+  "openapi": "/api-reference/openapi.json",
+  "api": {
+    "baseUrl": "https://optareach.com",
+    "playground": {
+      "mode": "show"
+    },
+    "maintainOrder": true
+  },
   "navigation": {
     "tabs": [
       {
@@ -38,6 +46,21 @@
               "platforms/stackoverflow",
               "platforms/email"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "openapi": "/api-reference/openapi.json"
           }
         ]
       }
