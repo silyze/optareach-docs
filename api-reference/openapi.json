@@ -93,12 +93,31 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "description": "Endpoint payload."
+                      "$ref": "#/components/schemas/MetaRoot"
                     }
                   },
                   "required": [
                     "data"
                   ]
+                },
+                "example": {
+                  "data": {
+                    "name": "OptaReach Public API",
+                    "version": "v1",
+                    "basePath": "/api/v1",
+                    "openapi": "/api/v1/openapi.json",
+                    "platforms": [
+                      {
+                        "name": "linkedin",
+                        "capabilities": {
+                          "prospects": true,
+                          "messaging": true,
+                          "trackedSearches": false,
+                          "aiRooms": true
+                        }
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -114,7 +133,29 @@
         "summary": "OpenAPI document",
         "responses": {
           "200": {
-            "description": "OpenAPI spec JSON"
+            "description": "OpenAPI spec JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "openapi": "3.1.0",
+                  "info": {
+                    "title": "OptaReach Public API",
+                    "version": "1.0.0"
+                  },
+                  "paths": {
+                    "/api/v1": {
+                      "get": {
+                        "summary": "API root metadata"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -127,7 +168,38 @@
         "summary": "List supported platforms",
         "responses": {
           "200": {
-            "description": "Platform list"
+            "description": "Platform list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Platform"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "name": "linkedin",
+                      "capabilities": {
+                        "prospects": true,
+                        "messaging": true,
+                        "trackedSearches": false,
+                        "aiRooms": true
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -145,7 +217,33 @@
         ],
         "responses": {
           "200": {
-            "description": "Platform details"
+            "description": "Platform details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Platform"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "name": "linkedin",
+                    "capabilities": {
+                      "prospects": true,
+                      "messaging": true,
+                      "trackedSearches": false,
+                      "aiRooms": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -166,7 +264,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Platform capabilities"
+            "description": "Platform capabilities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Capabilities"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "prospects": true,
+                    "messaging": true,
+                    "trackedSearches": false,
+                    "aiRooms": true
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -187,7 +308,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Accounts"
+            "description": "Accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Account"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "acc_linkedin_primary",
+                      "platform": "linkedin",
+                      "label": "Founder seat",
+                      "identifier": "simeon-founder",
+                      "status": "connected",
+                      "createdAt": "2026-03-20T09:14:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -202,18 +353,55 @@
           }
         ],
         "requestBody": {
+          "description": "Account connection payload",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "$ref": "#/components/schemas/AccountWrite"
+              },
+              "example": {
+                "label": "Founder seat",
+                "identifier": "simeon-founder",
+                "credentials": {
+                  "sessionCookie": "li_at=...",
+                  "proxyId": "proxy-eu-1"
+                },
+                "metadata": {
+                  "timezone": "Europe/Skopje"
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Account created"
+            "description": "Account created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "acc_linkedin_primary",
+                    "platform": "linkedin",
+                    "label": "Founder seat",
+                    "identifier": "simeon-founder",
+                    "status": "connected",
+                    "createdAt": "2026-03-20T09:14:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -234,7 +422,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Account"
+            "description": "Account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "acc_linkedin_primary",
+                    "platform": "linkedin",
+                    "label": "Founder seat",
+                    "identifier": "simeon-founder",
+                    "status": "connected",
+                    "createdAt": "2026-03-20T09:14:00.000Z"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -255,18 +468,50 @@
           }
         ],
         "requestBody": {
+          "description": "Account update payload",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "$ref": "#/components/schemas/AccountWrite"
+              },
+              "example": {
+                "label": "Founder seat EU",
+                "metadata": {
+                  "sendWindow": "08:00-17:00"
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Account updated"
+            "description": "Account updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "acc_linkedin_primary",
+                    "platform": "linkedin",
+                    "label": "Founder seat EU",
+                    "identifier": "simeon-founder",
+                    "status": "connected",
+                    "createdAt": "2026-03-20T09:14:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -285,7 +530,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Account deleted"
+            "description": "Account deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "acc_linkedin_primary"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -325,7 +591,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Prospect lists"
+            "description": "Prospect lists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProspectList"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "list_founders_eu",
+                      "platform": "linkedin",
+                      "name": "EU SaaS Founders",
+                      "description": "High-intent founders collected from outbound workflows.",
+                      "leadCount": 128,
+                      "createdAt": "2026-03-19T12:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -341,7 +637,53 @@
         ],
         "responses": {
           "201": {
-            "description": "Prospect list created"
+            "description": "Prospect list created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProspectList"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "list_founders_eu",
+                    "platform": "linkedin",
+                    "name": "EU SaaS Founders",
+                    "description": "High-intent founders collected from outbound workflows.",
+                    "leadCount": 128,
+                    "createdAt": "2026-03-19T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Prospect list payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProspectListWrite"
+              },
+              "example": {
+                "name": "EU SaaS Founders",
+                "description": "Prioritized founder list for Q2 outbound.",
+                "filters": {
+                  "region": [
+                    "Europe"
+                  ],
+                  "companyHeadcountMax": 200
+                }
+              }
+            }
           }
         }
       }
@@ -362,7 +704,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Prospect list"
+            "description": "Prospect list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProspectList"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "list_founders_eu",
+                    "platform": "linkedin",
+                    "name": "EU SaaS Founders",
+                    "description": "High-intent founders collected from outbound workflows.",
+                    "leadCount": 128,
+                    "createdAt": "2026-03-19T12:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -381,7 +748,47 @@
         ],
         "responses": {
           "200": {
-            "description": "Prospect list updated"
+            "description": "Prospect list updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProspectList"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "list_founders_eu",
+                    "platform": "linkedin",
+                    "name": "EU SaaS Founders - Hot",
+                    "description": "High-intent founders collected from outbound workflows.",
+                    "leadCount": 128,
+                    "createdAt": "2026-03-19T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Prospect list update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProspectListWrite"
+              },
+              "example": {
+                "name": "EU SaaS Founders - Hot",
+                "description": "Filtered down to higher-intent targets."
+              }
+            }
           }
         }
       },
@@ -400,7 +807,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Prospect list deleted"
+            "description": "Prospect list deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "list_founders_eu"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -421,7 +849,61 @@
         ],
         "responses": {
           "200": {
-            "description": "Leads page"
+            "description": "Leads page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Lead"
+                          }
+                        },
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "lead_jane_doe",
+                        "fullName": "Jane Doe",
+                        "firstName": "Jane",
+                        "lastName": "Doe",
+                        "company": "Acme",
+                        "headline": "Founder at Acme",
+                        "profileUrl": "https://linkedin.com/in/jane-doe",
+                        "email": "jane@acme.com",
+                        "status": "new"
+                      }
+                    ],
+                    "nextCursor": null,
+                    "total": 1
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -440,7 +922,52 @@
         ],
         "responses": {
           "200": {
-            "description": "Leads imported"
+            "description": "Leads imported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImportResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "imported": 1,
+                    "skipped": 0,
+                    "duplicateIds": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Lead append payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppendLeadsRequest"
+              },
+              "example": {
+                "leads": [
+                  {
+                    "externalId": "ln_jane_doe",
+                    "fullName": "Jane Doe",
+                    "company": "Acme",
+                    "headline": "Founder at Acme",
+                    "profileUrl": "https://linkedin.com/in/jane-doe",
+                    "email": "jane@acme.com"
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -461,7 +988,51 @@
         ],
         "responses": {
           "200": {
-            "description": "Import result"
+            "description": "Import result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImportResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "imported": 42,
+                    "skipped": 3,
+                    "duplicateIds": [
+                      "lead_existing_1"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "CSV row payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvImportRequest"
+              },
+              "example": {
+                "rows": [
+                  {
+                    "fullName": "Jane Doe",
+                    "company": "Acme",
+                    "profileUrl": "https://linkedin.com/in/jane-doe"
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -482,7 +1053,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Import result"
+            "description": "Import result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImportResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "imported": 10,
+                    "skipped": 0,
+                    "duplicateIds": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "JSON lead payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonLeadImportRequest"
+              },
+              "example": {
+                "leads": [
+                  {
+                    "externalId": "li_123",
+                    "fullName": "Jane Doe",
+                    "company": "Acme",
+                    "profileUrl": "https://linkedin.com/in/jane-doe"
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -503,7 +1117,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Move result"
+            "description": "Move result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MoveResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "moved": 1,
+                    "sourceListId": "list_founders_eu",
+                    "destinationListId": "list_hot_leads"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Lead move payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveLeadsRequest"
+              },
+              "example": {
+                "leadIds": [
+                  "lead_jane_doe"
+                ],
+                "destinationListId": "list_hot_leads"
+              }
+            }
           }
         }
       }
@@ -524,7 +1177,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Lead find-email status"
+            "description": "Lead find-email status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FindEmailResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "leadId": "lead_jane_doe",
+                    "status": "resolved",
+                    "email": "jane@acme.com",
+                    "provider": "hunter",
+                    "updatedAt": "2026-03-21T12:00:00.000Z"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -547,13 +1224,52 @@
         ],
         "responses": {
           "200": {
-            "description": "Find-email accepted/result"
+            "description": "Find-email accepted/result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FindEmailResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "leadId": "lead_jane_doe",
+                    "status": "queued",
+                    "email": null,
+                    "provider": "hunter",
+                    "updatedAt": "2026-03-21T12:00:00.000Z"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
+          }
+        },
+        "requestBody": {
+          "description": "Find-email payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FindEmailRequest"
+              },
+              "example": {
+                "forceRefresh": false,
+                "provider": "hunter"
+              }
+            }
           }
         }
       }
@@ -593,7 +1309,38 @@
         ],
         "responses": {
           "200": {
-            "description": "Campaigns"
+            "description": "Campaigns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Campaign"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "camp_founders_q2",
+                      "platform": "linkedin",
+                      "name": "Founders Q2 Outreach",
+                      "accountId": "acc_linkedin_primary",
+                      "listId": "list_founders_eu",
+                      "status": "active",
+                      "createdAt": "2026-03-18T08:30:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -609,7 +1356,53 @@
         ],
         "responses": {
           "201": {
-            "description": "Campaign created"
+            "description": "Campaign created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Campaign"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "camp_founders_q2",
+                    "platform": "linkedin",
+                    "name": "Founders Q2 Outreach",
+                    "accountId": "acc_linkedin_primary",
+                    "listId": "list_founders_eu",
+                    "status": "active",
+                    "createdAt": "2026-03-18T08:30:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Campaign payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignWrite"
+              },
+              "example": {
+                "name": "Founders Q2 Outreach",
+                "accountId": "acc_linkedin_primary",
+                "listId": "list_founders_eu",
+                "messageTemplate": "Hi {{firstName}}, noticed {{company}} is growing. Worth comparing outbound notes?",
+                "cadence": {
+                  "followUpDays": 4
+                }
+              }
+            }
           }
         }
       }
@@ -630,7 +1423,33 @@
         ],
         "responses": {
           "200": {
-            "description": "Campaign"
+            "description": "Campaign",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Campaign"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "camp_founders_q2",
+                    "platform": "linkedin",
+                    "name": "Founders Q2 Outreach",
+                    "accountId": "acc_linkedin_primary",
+                    "listId": "list_founders_eu",
+                    "status": "active",
+                    "createdAt": "2026-03-18T08:30:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -649,7 +1468,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Campaign updated"
+            "description": "Campaign updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Campaign"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "camp_founders_q2",
+                    "platform": "linkedin",
+                    "name": "Founders Q2 Outreach - Priority",
+                    "accountId": "acc_linkedin_primary",
+                    "listId": "list_founders_eu",
+                    "status": "active",
+                    "createdAt": "2026-03-18T08:30:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Campaign update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignWrite"
+              },
+              "example": {
+                "name": "Founders Q2 Outreach - Priority",
+                "cadence": {
+                  "followUpDays": 3
+                }
+              }
+            }
           }
         }
       },
@@ -668,7 +1530,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Campaign deleted"
+            "description": "Campaign deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "camp_founders_q2"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -689,7 +1572,29 @@
         ],
         "responses": {
           "200": {
-            "description": "Paused"
+            "description": "Paused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ActionResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "ok": true,
+                    "message": "Campaign paused.",
+                    "status": "paused"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -710,7 +1615,29 @@
         ],
         "responses": {
           "200": {
-            "description": "Resumed"
+            "description": "Resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ActionResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "ok": true,
+                    "message": "Campaign resumed.",
+                    "status": "active"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -731,7 +1658,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Stats"
+            "description": "Stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CampaignStats"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "campaignId": "camp_founders_q2",
+                    "queued": 42,
+                    "sent": 38,
+                    "replied": 7,
+                    "openRate": 0.61
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -752,7 +1703,56 @@
         ],
         "responses": {
           "200": {
-            "description": "Targets"
+            "description": "Targets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CampaignTarget"
+                          }
+                        },
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "leadId": "lead_jane_doe",
+                        "fullName": "Jane Doe",
+                        "company": "Acme",
+                        "status": "contacted"
+                      }
+                    ],
+                    "nextCursor": null,
+                    "total": 1
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -774,10 +1774,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Generated template"
+            "description": "Generated template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MessageTemplate"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "body": "Hi {{firstName}}, noticed {{company}} is hiring. Worth trading notes on outbound efficiency?",
+                    "variables": [
+                      "firstName",
+                      "company"
+                    ]
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "requestBody": {
+          "description": "Template generation payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignTemplateRequest"
+              },
+              "example": {
+                "objective": "Book a discovery call",
+                "tone": "concise",
+                "contextNotes": "Mention recent hiring momentum and founder-led GTM."
+              }
+            }
           }
         }
       }
@@ -795,7 +1835,59 @@
         ],
         "responses": {
           "200": {
-            "description": "Conversation page"
+            "description": "Conversation page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Conversation"
+                          }
+                        },
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "acc_linkedin_primary:prospect_target_123",
+                        "accountId": "acc_linkedin_primary",
+                        "leadId": "lead_jane_doe",
+                        "title": "Jane Doe",
+                        "unreadCount": 1,
+                        "lastMessagePreview": "Happy to chat next week.",
+                        "lastMessageAt": "2026-03-21T10:45:00.000Z"
+                      }
+                    ],
+                    "nextCursor": null,
+                    "total": 1
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -816,7 +1908,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Messages"
+            "description": "Messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Message"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "msg_123",
+                      "conversationId": "acc_linkedin_primary:prospect_target_123",
+                      "direction": "outbound",
+                      "body": "Hi Jane, noticed Acme is hiring SDRs. Worth comparing notes?",
+                      "sentAt": "2026-03-21T10:45:00.000Z",
+                      "status": "sent"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -835,7 +1957,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Message sent"
+            "description": "Message sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "msg_124",
+                    "conversationId": "acc_linkedin_primary:prospect_target_123",
+                    "direction": "outbound",
+                    "body": "Happy to share examples. Are you open next Tuesday?",
+                    "sentAt": "2026-03-21T10:45:00.000Z",
+                    "status": "sent"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Message payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequest"
+              },
+              "example": {
+                "body": "Happy to share examples. Are you open next Tuesday?"
+              }
+            }
           }
         }
       }
@@ -856,7 +2017,29 @@
         ],
         "responses": {
           "200": {
-            "description": "Marked as read"
+            "description": "Marked as read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ActionResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "ok": true,
+                    "message": "Conversation marked as read.",
+                    "status": "read"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -874,7 +2057,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Unread summary"
+            "description": "Unread summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/UnreadSummary"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "totalUnread": 12,
+                    "conversationCount": 4
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -892,7 +2096,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Tracked searches"
+            "description": "Tracked searches",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TrackedSearch"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "search_founder_mentions",
+                      "platform": "reddit",
+                      "name": "Founder pain points",
+                      "query": "looking for outbound agency",
+                      "status": "running",
+                      "createdAt": "2026-03-17T07:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -908,7 +2142,51 @@
         ],
         "responses": {
           "201": {
-            "description": "Tracked search created"
+            "description": "Tracked search created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TrackedSearch"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "search_founder_mentions",
+                    "platform": "reddit",
+                    "name": "Founder pain points",
+                    "query": "looking for outbound agency",
+                    "status": "running",
+                    "createdAt": "2026-03-17T07:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Tracked search payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackedSearchWrite"
+              },
+              "example": {
+                "name": "Founder pain points",
+                "query": "looking for outbound agency",
+                "channels": [
+                  "reddit",
+                  "x"
+                ]
+              }
+            }
           }
         }
       }
@@ -929,7 +2207,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Tracked search"
+            "description": "Tracked search",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TrackedSearch"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "search_founder_mentions",
+                    "platform": "reddit",
+                    "name": "Founder pain points",
+                    "query": "looking for outbound agency",
+                    "status": "running",
+                    "createdAt": "2026-03-17T07:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -948,7 +2251,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Tracked search updated"
+            "description": "Tracked search updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TrackedSearch"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "search_founder_mentions",
+                    "platform": "reddit",
+                    "name": "Founder pain points - EU only",
+                    "query": "outbound agency europe",
+                    "status": "running",
+                    "createdAt": "2026-03-17T07:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Tracked search update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackedSearchWrite"
+              },
+              "example": {
+                "name": "Founder pain points - EU only",
+                "query": "outbound agency europe",
+                "channels": [
+                  "reddit"
+                ]
+              }
+            }
           }
         }
       },
@@ -967,7 +2313,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Tracked search deleted"
+            "description": "Tracked search deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "search_founder_mentions"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -988,7 +2355,57 @@
         ],
         "responses": {
           "200": {
-            "description": "Tracked search results"
+            "description": "Tracked search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TrackedSearchResult"
+                          }
+                        },
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "result_123",
+                        "author": "startupfounder88",
+                        "body": "Looking for better outbound tooling for our sales team.",
+                        "permalink": "https://reddit.com/r/sales/comments/example",
+                        "createdAt": "2026-03-21T07:45:00.000Z"
+                      }
+                    ],
+                    "nextCursor": null,
+                    "total": 1
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1013,10 +2430,47 @@
         ],
         "responses": {
           "200": {
-            "description": "Reply queued"
+            "description": "Reply queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QueuedReply"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "queued": true,
+                    "jobId": "job_reply_queue_123",
+                    "resultId": "result_123"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "requestBody": {
+          "description": "Reply payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyRequest"
+              },
+              "example": {
+                "body": "We’ve helped a few founder-led teams with this exact bottleneck.",
+                "accountId": "acc_reddit_primary"
+              }
+            }
           }
         }
       }
@@ -1056,7 +2510,36 @@
         ],
         "responses": {
           "200": {
-            "description": "AI rooms"
+            "description": "AI rooms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AIRoom"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "room_lead_research",
+                      "platform": "linkedin",
+                      "title": "Lead research: Jane Doe",
+                      "createdAt": "2026-03-21T09:00:00.000Z",
+                      "lastMessageAt": "2026-03-21T09:02:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1072,7 +2555,49 @@
         ],
         "responses": {
           "201": {
-            "description": "AI room created"
+            "description": "AI room created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AIRoom"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "room_lead_research",
+                    "platform": "linkedin",
+                    "title": "Lead research: Jane Doe",
+                    "createdAt": "2026-03-21T09:00:00.000Z",
+                    "lastMessageAt": "2026-03-21T09:02:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "AI room payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIRoomWrite"
+              },
+              "example": {
+                "title": "Lead research: Jane Doe",
+                "context": {
+                  "leadId": "lead_jane_doe",
+                  "company": "Acme"
+                }
+              }
+            }
           }
         }
       }
@@ -1093,7 +2618,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Message appended"
+            "description": "Message appended",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AIMessage"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "airm_123",
+                    "roomId": "room_lead_research",
+                    "role": "assistant",
+                    "content": "Jane looks like a founder-led buyer with strong hiring intent.",
+                    "createdAt": "2026-03-21T09:02:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "AI message payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIMessageWrite"
+              },
+              "example": {
+                "role": "user",
+                "content": "Summarize this lead before outreach."
+              }
+            }
           }
         }
       }
@@ -1111,7 +2675,36 @@
         ],
         "responses": {
           "200": {
-            "description": "Jobs"
+            "description": "Jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Job"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "job_reply_queue_123",
+                      "type": "tracked-search-reply",
+                      "status": "queued",
+                      "progress": 0,
+                      "createdAt": "2026-03-21T11:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -1132,7 +2725,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Job"
+            "description": "Job",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Job"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "job_reply_queue_123",
+                    "type": "tracked-search-reply",
+                    "status": "queued",
+                    "progress": 0,
+                    "createdAt": "2026-03-21T11:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1145,7 +2762,37 @@
         "summary": "List workspaces",
         "responses": {
           "200": {
-            "description": "Workspaces"
+            "description": "Workspaces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Workspace"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "ws_optareach",
+                      "name": "OptaReach",
+                      "slug": "optareach",
+                      "plan": "growth",
+                      "role": "owner",
+                      "createdAt": "2026-01-10T10:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1156,7 +2803,47 @@
         "summary": "Create workspace",
         "responses": {
           "201": {
-            "description": "Workspace created"
+            "description": "Workspace created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workspace"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "ws_optareach",
+                    "name": "OptaReach",
+                    "slug": "optareach",
+                    "plan": "growth",
+                    "role": "owner",
+                    "createdAt": "2026-01-10T10:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Workspace payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkspaceWrite"
+              },
+              "example": {
+                "name": "OptaReach",
+                "slug": "optareach"
+              }
+            }
           }
         }
       }
@@ -1174,7 +2861,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Workspace details"
+            "description": "Workspace details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workspace"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "ws_optareach",
+                    "name": "OptaReach",
+                    "slug": "optareach",
+                    "plan": "growth",
+                    "role": "owner",
+                    "createdAt": "2026-01-10T10:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1190,7 +2902,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Workspace updated"
+            "description": "Workspace updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workspace"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "ws_optareach",
+                    "name": "OptaReach Growth",
+                    "slug": "optareach",
+                    "plan": "growth",
+                    "role": "owner",
+                    "createdAt": "2026-01-10T10:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Workspace update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkspaceWrite"
+              },
+              "example": {
+                "name": "OptaReach Growth"
+              }
+            }
           }
         }
       },
@@ -1206,7 +2957,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Workspace deleted"
+            "description": "Workspace deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "ws_optareach"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1224,7 +2996,44 @@
         ],
         "responses": {
           "200": {
-            "description": "Members"
+            "description": "Members",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MemberDirectory"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "members": [
+                      {
+                        "id": "member_ops_1",
+                        "email": "ops@acme.com",
+                        "fullName": "Alex Ops",
+                        "role": "admin",
+                        "status": "active"
+                      }
+                    ],
+                    "invitations": [
+                      {
+                        "id": "invite_revops_1",
+                        "email": "revops@acme.com",
+                        "fullName": "Rev Ops",
+                        "role": "member",
+                        "status": "invited"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1240,7 +3049,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Invite result"
+            "description": "Invite result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WorkspaceMember"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "invite_ops_1",
+                    "email": "ops@acme.com",
+                    "fullName": "Alex Ops",
+                    "role": "admin",
+                    "status": "invited"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Workspace invitation payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteMemberRequest"
+              },
+              "example": {
+                "email": "ops@acme.com",
+                "role": "admin"
+              }
+            }
           }
         }
       },
@@ -1256,7 +3104,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Role updated"
+            "description": "Role updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WorkspaceMember"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "member_ops_1",
+                    "email": "ops@acme.com",
+                    "fullName": "Alex Ops",
+                    "role": "owner",
+                    "status": "active"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Member role update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberRequest"
+              },
+              "example": {
+                "memberId": "member_ops_1",
+                "role": "owner"
+              }
+            }
           }
         }
       },
@@ -1272,7 +3159,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Removed"
+            "description": "Removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "member_ops_1"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1285,7 +3193,36 @@
         "summary": "List knowledge bases",
         "responses": {
           "200": {
-            "description": "Knowledge base list"
+            "description": "Knowledge base list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KnowledgeBase"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "kb_outbound_playbook",
+                      "name": "Outbound Playbook",
+                      "description": "Sales messaging, qualification notes, and objection handling.",
+                      "resourceCount": 6,
+                      "createdAt": "2026-03-10T08:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1296,7 +3233,46 @@
         "summary": "Create knowledge base",
         "responses": {
           "201": {
-            "description": "Knowledge base created"
+            "description": "Knowledge base created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/KnowledgeBase"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "kb_outbound_playbook",
+                    "name": "Outbound Playbook",
+                    "description": "Sales messaging, qualification notes, and objection handling.",
+                    "resourceCount": 6,
+                    "createdAt": "2026-03-10T08:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Knowledge base payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KnowledgeBaseWrite"
+              },
+              "example": {
+                "name": "Outbound Playbook",
+                "description": "Sales messaging, examples, and objection handling."
+              }
+            }
           }
         }
       }
@@ -1314,7 +3290,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Knowledge base"
+            "description": "Knowledge base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/KnowledgeBase"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "kb_outbound_playbook",
+                    "name": "Outbound Playbook",
+                    "description": "Sales messaging, qualification notes, and objection handling.",
+                    "resourceCount": 6,
+                    "createdAt": "2026-03-10T08:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1330,7 +3330,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Deleted"
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "kb_outbound_playbook"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1348,7 +3369,56 @@
         ],
         "responses": {
           "200": {
-            "description": "Resources added"
+            "description": "Resources added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AddedResources"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "added": [
+                      {
+                        "id": "kb_res_pricing",
+                        "type": "url",
+                        "title": "Pricing page",
+                        "value": "https://acme.com/pricing",
+                        "status": "indexed"
+                      }
+                    ],
+                    "totalResources": 6
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Knowledge base resource payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KnowledgeBaseResourcesWrite"
+              },
+              "example": {
+                "resources": [
+                  {
+                    "type": "url",
+                    "value": "https://acme.com/pricing",
+                    "title": "Pricing page"
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -1369,7 +3439,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource deleted"
+            "description": "Resource deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeleteResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "deleted": true,
+                    "id": "kb_res_pricing"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1382,7 +3473,32 @@
         "summary": "Overview metrics",
         "responses": {
           "200": {
-            "description": "Metrics"
+            "description": "Metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OverviewMetrics"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "workspaceCount": 3,
+                    "accountCount": 8,
+                    "activeCampaigns": 5,
+                    "unreadMessages": 12,
+                    "trackedSearches": 9,
+                    "creditsRemaining": 540
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1395,7 +3511,37 @@
         "summary": "List subscriptions",
         "responses": {
           "200": {
-            "description": "Subscriptions"
+            "description": "Subscriptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "sub_growth_monthly",
+                      "plan": "growth",
+                      "status": "active",
+                      "interval": "monthly",
+                      "seats": 5,
+                      "currentPeriodEnd": "2026-04-01T00:00:00.000Z"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -1408,7 +3554,29 @@
         "summary": "Get credit balance",
         "responses": {
           "200": {
-            "description": "Credits"
+            "description": "Credits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CreditBalance"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "remaining": 540,
+                    "usedThisCycle": 60,
+                    "resetAt": "2026-04-01T00:00:00.000Z"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1421,7 +3589,31 @@
         "summary": "Get profile",
         "responses": {
           "200": {
-            "description": "Profile"
+            "description": "Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Profile"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "user_simeon",
+                    "email": "simeon@optareach.com",
+                    "fullName": "Simeon",
+                    "timezone": "Europe/Skopje",
+                    "workspaceId": "ws_optareach"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1432,7 +3624,46 @@
         "summary": "Update profile",
         "responses": {
           "200": {
-            "description": "Profile updated"
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Profile"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "user_simeon",
+                    "email": "simeon@optareach.com",
+                    "fullName": "Simeon S.",
+                    "timezone": "Europe/Skopje",
+                    "workspaceId": "ws_optareach"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Profile update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileWrite"
+              },
+              "example": {
+                "fullName": "Simeon S.",
+                "timezone": "Europe/Skopje"
+              }
+            }
           }
         }
       }
@@ -1445,7 +3676,34 @@
         "summary": "List conversation tags",
         "responses": {
           "200": {
-            "description": "Tags"
+            "description": "Tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConversationTag"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "tag_high_intent",
+                      "name": "High intent",
+                      "color": "#2563eb"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1456,7 +3714,44 @@
         "summary": "Upsert conversation tag",
         "responses": {
           "200": {
-            "description": "Tag upserted"
+            "description": "Tag upserted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ConversationTag"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "id": "tag_high_intent",
+                    "name": "High intent",
+                    "color": "#2563eb"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Conversation tag payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagWrite"
+              },
+              "example": {
+                "name": "High intent",
+                "color": "#2563eb"
+              }
+            }
           }
         }
       }
@@ -1469,7 +3764,37 @@
         "summary": "List notifications",
         "responses": {
           "200": {
-            "description": "Notifications"
+            "description": "Notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Notification"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "notif_campaign_replied",
+                      "type": "campaign.reply",
+                      "title": "Jane Doe replied to Founders Q2 Outreach",
+                      "read": false,
+                      "createdAt": "2026-03-21T11:30:00.000Z",
+                      "link": "/dashboard/linkedin/inbox"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1480,7 +3805,47 @@
         "summary": "Update notification read status",
         "responses": {
           "200": {
-            "description": "Updated IDs"
+            "description": "Updated IDs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NotificationUpdateResult"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "example": {
+                  "data": {
+                    "updatedIds": [
+                      "notif_campaign_replied"
+                    ],
+                    "read": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "Notification update payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationWrite"
+              },
+              "example": {
+                "ids": [
+                  "notif_campaign_replied"
+                ],
+                "read": true
+              }
+            }
           }
         }
       }
@@ -1498,7 +3863,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-api-key",
-        "description": "Reserved for external API key auth rollout."
+        "description": "Workspace API key for server-to-server API access."
       }
     },
     "parameters": {
@@ -1643,6 +4008,1323 @@
         "required": [
           "error"
         ]
+      },
+      "MetaRoot": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "basePath": {
+            "type": "string"
+          },
+          "openapi": {
+            "type": "string"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Platform"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "basePath",
+          "openapi",
+          "platforms"
+        ]
+      },
+      "Capabilities": {
+        "type": "object",
+        "properties": {
+          "prospects": {
+            "type": "boolean"
+          },
+          "messaging": {
+            "type": "boolean"
+          },
+          "trackedSearches": {
+            "type": "boolean"
+          },
+          "aiRooms": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "prospects",
+          "messaging",
+          "trackedSearches",
+          "aiRooms"
+        ]
+      },
+      "Platform": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/Capabilities"
+          }
+        },
+        "required": [
+          "name",
+          "capabilities"
+        ]
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "label",
+          "status"
+        ]
+      },
+      "ProspectList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "leadCount": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "name",
+          "leadCount"
+        ]
+      },
+      "Lead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "profileUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "email"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "fullName"
+        ]
+      },
+      "ImportResult": {
+        "type": "object",
+        "properties": {
+          "imported": {
+            "type": "integer"
+          },
+          "skipped": {
+            "type": "integer"
+          },
+          "duplicateIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "imported",
+          "skipped",
+          "duplicateIds"
+        ]
+      },
+      "MoveResult": {
+        "type": "object",
+        "properties": {
+          "moved": {
+            "type": "integer"
+          },
+          "sourceListId": {
+            "type": "string"
+          },
+          "destinationListId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "moved",
+          "sourceListId",
+          "destinationListId"
+        ]
+      },
+      "FindEmailResult": {
+        "type": "object",
+        "properties": {
+          "leadId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "email"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "leadId",
+          "status"
+        ]
+      },
+      "Campaign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "listId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "name",
+          "status"
+        ]
+      },
+      "CampaignStats": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          },
+          "queued": {
+            "type": "integer"
+          },
+          "sent": {
+            "type": "integer"
+          },
+          "replied": {
+            "type": "integer"
+          },
+          "openRate": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "campaignId",
+          "queued",
+          "sent",
+          "replied",
+          "openRate"
+        ]
+      },
+      "CampaignTarget": {
+        "type": "object",
+        "properties": {
+          "leadId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "leadId",
+          "fullName",
+          "status"
+        ]
+      },
+      "MessageTemplate": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "body",
+          "variables"
+        ]
+      },
+      "Conversation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "leadId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "unreadCount": {
+            "type": "integer"
+          },
+          "lastMessagePreview": {
+            "type": "string"
+          },
+          "lastMessageAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "unreadCount"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "conversationId": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "conversationId",
+          "direction",
+          "body"
+        ]
+      },
+      "UnreadSummary": {
+        "type": "object",
+        "properties": {
+          "totalUnread": {
+            "type": "integer"
+          },
+          "conversationCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "totalUnread",
+          "conversationCount"
+        ]
+      },
+      "TrackedSearch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "name",
+          "query",
+          "status"
+        ]
+      },
+      "TrackedSearchResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "author",
+          "body"
+        ]
+      },
+      "QueuedReply": {
+        "type": "object",
+        "properties": {
+          "queued": {
+            "type": "boolean"
+          },
+          "jobId": {
+            "type": "string"
+          },
+          "resultId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "queued",
+          "jobId",
+          "resultId"
+        ]
+      },
+      "AIRoom": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastMessageAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "title",
+          "createdAt"
+        ]
+      },
+      "AIMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "roomId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "roomId",
+          "role",
+          "content"
+        ]
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "status"
+        ]
+      },
+      "Workspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "plan",
+          "role"
+        ]
+      },
+      "WorkspaceMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "role",
+          "status"
+        ]
+      },
+      "MemberDirectory": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceMember"
+            }
+          },
+          "invitations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceMember"
+            }
+          }
+        },
+        "required": [
+          "members",
+          "invitations"
+        ]
+      },
+      "KnowledgeBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "resourceCount": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "resourceCount"
+        ]
+      },
+      "KnowledgeBaseResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "value"
+        ]
+      },
+      "AddedResources": {
+        "type": "object",
+        "properties": {
+          "added": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeBaseResource"
+            }
+          },
+          "totalResources": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "added",
+          "totalResources"
+        ]
+      },
+      "OverviewMetrics": {
+        "type": "object",
+        "properties": {
+          "workspaceCount": {
+            "type": "integer"
+          },
+          "accountCount": {
+            "type": "integer"
+          },
+          "activeCampaigns": {
+            "type": "integer"
+          },
+          "unreadMessages": {
+            "type": "integer"
+          },
+          "trackedSearches": {
+            "type": "integer"
+          },
+          "creditsRemaining": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "workspaceCount",
+          "accountCount",
+          "activeCampaigns",
+          "unreadMessages",
+          "trackedSearches",
+          "creditsRemaining"
+        ]
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "string"
+          },
+          "seats": {
+            "type": "integer"
+          },
+          "currentPeriodEnd": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "plan",
+          "status",
+          "interval"
+        ]
+      },
+      "CreditBalance": {
+        "type": "object",
+        "properties": {
+          "remaining": {
+            "type": "integer"
+          },
+          "usedThisCycle": {
+            "type": "integer"
+          },
+          "resetAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "remaining",
+          "usedThisCycle",
+          "resetAt"
+        ]
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName"
+        ]
+      },
+      "ConversationTag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "color"
+        ]
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "read": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "title",
+          "read"
+        ]
+      },
+      "ActionResult": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "DeleteResult": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "deleted",
+          "id"
+        ]
+      },
+      "AccountWrite": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "credentials": {
+            "type": "object",
+            "properties": {
+              "sessionCookie": {
+                "type": "string"
+              },
+              "proxyId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "sessionCookie"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ProspectListWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "LeadInput": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "profileUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "email"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "AppendLeadsRequest": {
+        "type": "object",
+        "properties": {
+          "leads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadInput"
+            }
+          }
+        },
+        "required": [
+          "leads"
+        ]
+      },
+      "CsvImportRequest": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "rows"
+        ]
+      },
+      "JsonLeadImportRequest": {
+        "type": "object",
+        "properties": {
+          "leads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadInput"
+            }
+          }
+        },
+        "required": [
+          "leads"
+        ]
+      },
+      "MoveLeadsRequest": {
+        "type": "object",
+        "properties": {
+          "leadIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destinationListId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "leadIds",
+          "destinationListId"
+        ]
+      },
+      "FindEmailRequest": {
+        "type": "object",
+        "properties": {
+          "forceRefresh": {
+            "type": "boolean"
+          },
+          "provider": {
+            "type": "string"
+          }
+        }
+      },
+      "CampaignWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "listId": {
+            "type": "string"
+          },
+          "messageTemplate": {
+            "type": "string"
+          },
+          "cadence": {
+            "type": "object",
+            "properties": {
+              "followUpDays": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "CampaignTemplateRequest": {
+        "type": "object",
+        "properties": {
+          "objective": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string"
+          },
+          "contextNotes": {
+            "type": "string"
+          }
+        }
+      },
+      "SendMessageRequest": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "body"
+        ]
+      },
+      "TrackedSearchWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ReplyRequest": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "body"
+        ]
+      },
+      "AIRoomWrite": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "AIMessageWrite": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "content"
+        ]
+      },
+      "WorkspaceWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "InviteMemberRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "role"
+        ]
+      },
+      "UpdateMemberRequest": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "memberId",
+          "role"
+        ]
+      },
+      "KnowledgeBaseWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "KnowledgeBaseResourcesWrite": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "resources"
+        ]
+      },
+      "ProfileWrite": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        }
+      },
+      "TagWrite": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "NotificationWrite": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "read": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ids",
+          "read"
+        ]
+      },
+      "NotificationUpdateResult": {
+        "type": "object",
+        "properties": {
+          "updatedIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "read": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "updatedIds",
+          "read"
+        ]
       }
     },
     "responses": {
@@ -1673,6 +5355,12 @@
               "required": [
                 "error"
               ]
+            },
+            "example": {
+              "error": {
+                "code": "unauthorized",
+                "message": "Authentication required."
+              }
             }
           }
         }
@@ -1704,6 +5392,12 @@
               "required": [
                 "error"
               ]
+            },
+            "example": {
+              "error": {
+                "code": "not_found",
+                "message": "Requested resource was not found."
+              }
             }
           }
         }
@@ -1735,6 +5429,15 @@
               "required": [
                 "error"
               ]
+            },
+            "example": {
+              "error": {
+                "code": "validation_error",
+                "message": "Payload failed validation.",
+                "details": {
+                  "field": "body"
+                }
+              }
             }
           }
         }
@@ -1766,6 +5469,12 @@
               "required": [
                 "error"
               ]
+            },
+            "example": {
+              "error": {
+                "code": "not_implemented",
+                "message": "This compatibility endpoint is not implemented yet."
+              }
             }
           }
         }
