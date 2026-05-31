@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OptaReach Public API",
+    "title": "Optareach Public API",
     "version": "1.0.0",
     "description": "Platform-first API surface for accounts, prospects, campaigns, inbox, tracked searches, AI rooms, jobs, workspaces, analytics, billing, profile, and knowledge bases."
   },
@@ -102,7 +102,7 @@
                 },
                 "example": {
                   "data": {
-                    "name": "OptaReach Public API",
+                    "name": "Optareach Public API",
                     "version": "v1",
                     "basePath": "/api/v1",
                     "openapi": "/api/v1/openapi.json",
@@ -143,7 +143,7 @@
                 "example": {
                   "openapi": "3.1.0",
                   "info": {
-                    "title": "OptaReach Public API",
+                    "title": "Optareach Public API",
                     "version": "1.0.0"
                   },
                   "paths": {
@@ -2783,7 +2783,7 @@
                   "data": [
                     {
                       "id": "ws_optareach",
-                      "name": "OptaReach",
+                      "name": "Optareach",
                       "slug": "optareach",
                       "plan": "growth",
                       "role": "owner",
@@ -2820,7 +2820,7 @@
                 "example": {
                   "data": {
                     "id": "ws_optareach",
-                    "name": "OptaReach",
+                    "name": "Optareach",
                     "slug": "optareach",
                     "plan": "growth",
                     "role": "owner",
@@ -2840,7 +2840,7 @@
                 "$ref": "#/components/schemas/WorkspaceWrite"
               },
               "example": {
-                "name": "OptaReach",
+                "name": "Optareach",
                 "slug": "optareach"
               }
             }
@@ -2878,7 +2878,7 @@
                 "example": {
                   "data": {
                     "id": "ws_optareach",
-                    "name": "OptaReach",
+                    "name": "Optareach",
                     "slug": "optareach",
                     "plan": "growth",
                     "role": "owner",
@@ -2919,7 +2919,7 @@
                 "example": {
                   "data": {
                     "id": "ws_optareach",
-                    "name": "OptaReach Growth",
+                    "name": "Optareach Growth",
                     "slug": "optareach",
                     "plan": "growth",
                     "role": "owner",
@@ -2939,7 +2939,7 @@
                 "$ref": "#/components/schemas/WorkspaceWrite"
               },
               "example": {
-                "name": "OptaReach Growth"
+                "name": "Optareach Growth"
               }
             }
           }
